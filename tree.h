@@ -1,0 +1,38 @@
+#include "contiki.h"
+#include "random.h"
+#include <stdio.h>
+#include "dev/leds.h"
+#include "lib/list.h"
+#include "lib/memb.h"
+#include "net/rime/rime.h"
+#include "dev/button-sensor.h"
+/*Cambiar linea de abajo por la que corresponda*/
+#include "/home/USER_PROFILE/contiki/dev/cc2420/cc2420.h" 
+
+#define INF_NEG -999
+#define MAX_NEIGHBORS 16
+
+
+/*Definición de estructuras*/
+struct neighbors {
+  struct neighbors *next;
+  linkaddr_t addr;
+  signed int rssi;
+};
+
+struct node {
+  linkaddr_t parent;
+  signed int rssi;
+};
+
+
+
+/* Esta función guarda la info de los neighbors */
+/* see: http://contiki.sourceforge.net/docs/2.6/a01684.html   */
+MEMB(neighborsMemb, struct neighbors, MAX_NEIGHBORS);
+
+/* Función/libreria que crea la lista de neighbors */
+/* see: http://contiki.sourceforge.net/docs/2.6/a01682.html  */
+LIST(neighborsList);
+
+void handleNode(struct neighbors *node, linkaddr_t addr, signed int rssi);
