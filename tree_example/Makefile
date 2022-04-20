@@ -1,4 +1,4 @@
-CONTIKI = /home/USER_PROFILE/contiki
+CONTIKI = /home/gnaguerrer/contiki
 
 PROJECT_SOURCEFILES += tree.c
 
