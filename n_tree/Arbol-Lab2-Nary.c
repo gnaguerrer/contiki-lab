@@ -50,17 +50,18 @@ int main(int argc, char *argv[])
     add_child(node1, node4);
     add_child(node1, node5);
 
+    add_child(node5, node10);
+
     add_child(node2, node6);
     add_child(node2, node7);
     add_child(node2, node8);
 
     add_child(node8, node9);
-    add_child(node9, node10);
 
     print_node_decendents(root, false);
     printf("\n");
-    int nodeToWithParent=search_forwarder_withParent(node2, node10);
-    int nodeTo=search_forwarder(node2, node10);
+   /*  int nodeToWithParent=search_forwarder_withParent(node1, node10); */
+    int nodeTo=search_forwarder(node1, node10);
  }
 
 node * new_node(int id){
@@ -161,13 +162,14 @@ int search_forwarder(node* from, node* to){
             }
         }
     }
-    if(childs->id){
+    if(childs!=NULL){
          printf("Send from node %d \n", childs->id); 
         return childs->id;
     } else {
         printf("Unable to send packet from %d \n", from->id);
         return -9999;
     }
+    foundNode=false;
 }
 
 void search_forwarder_childs(node* from, node* to, bool checkSilbings){
@@ -186,24 +188,5 @@ void search_forwarder_childs(node* from, node* to, bool checkSilbings){
 
 
 
-/* void printList(node* node){
-    if(node){
-        printf(" Route %d  \n", node->nodeParent->id);
-        if(node->nodeParent->nodeParent==NULL && node->nodeParent!=NULL){
-        printf(" Routssse %d  \n", node->id);
 
-            }else{
-        printList(node->nodeParent);
-
-            }
-        if(node->nodeParent->nodeParent == NULL  ){
-        printList(node->nodeParent);
-
-        }else{
-
-        }
-    }else{
-        printf("Empty linked list \n");
-    }
-} */
 
