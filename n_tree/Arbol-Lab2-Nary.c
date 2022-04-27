@@ -9,20 +9,18 @@ struct node {
     struct node *nodeParent;
 };
 
-struct routeList
-{
-    int id;
-    struct routeList *next;
-};
-
 typedef struct node node;
-struct routeList* routes;
+
+int fowardNode=-9999;
 
 node * new_node(int);
 node * add_sibling(node *, node *);
 node * add_child(node *, node *);
 void print_node_decendents(node *, bool);
+
+int search_forwarder(node *, node *);
 void searchNode(node *, node *);
+
 void printList(node *);
 
 
@@ -57,8 +55,7 @@ int main(int argc, char *argv[])
 
     print_node_decendents(root, false);
     printf("\n");
-    searchNode(root, node10);
-
+    int nodeTo=search_forwarder(node1, node8);
  }
 
 node * new_node(int id){
@@ -122,44 +119,34 @@ void print_node_decendents(struct node* root, bool hasSilbing){
     }
 }
 
+
+int search_forwarder(node* from, node* to){
+    searchNode(from, to);
+    return fowardNode;
+}
+
 void searchNode(node* from, node* to){
     if(to->nodeParent){
     /* Si el nodo destino tiene un padre valido */
         if(to->nodeParent->id==from->id){
-            printf(" Se debe enviar el paquete hacia el nodo %d  \n", to->id);
-            return to->id;
+            printf(" Send from node %d  \n", to->id);
+            fowardNode=to->id;
         }else{
            searchNode(from, to->nodeParent);
         }
     }else{
         /* Sino indica que no se puede enviar */
-        printf("No se pueden enviar los paquetes desde el node %d \n", from->id);
-        return NULL;
+        printf("Unable to send packet from %d \n", from->id);
+        fowardNode=-9999;
     }
 }
 
 
-/* void searchNode(node* from, node* to){
-    if(from){
-        if(from->id == to->id){    
-            printf("\n Send to %d successfully. \n", from->id);
-            printList(from);
-        } else {
-            if(from->child){
-                searchNode(from->child, to);
-            }
-            if(from->sibling){
-                searchNode(from->sibling, to);
-            }
-        }
-        
-    }
-} */
 
 
-void printList(node* node){
+/* void printList(node* node){
     if(node){
-        /* printf(" Route %d  \n", node->nodeParent->id); */
+        printf(" Route %d  \n", node->nodeParent->id);
         if(node->nodeParent->nodeParent==NULL && node->nodeParent!=NULL){
         printf(" Routssse %d  \n", node->id);
 
@@ -167,15 +154,14 @@ void printList(node* node){
         printList(node->nodeParent);
 
             }
-       /*  if(node->nodeParent->nodeParent == NULL  ){
+        if(node->nodeParent->nodeParent == NULL  ){
         printList(node->nodeParent);
 
         }else{
 
-        } */
+        }
     }else{
         printf("Empty linked list \n");
     }
-
-}
+} */
 
