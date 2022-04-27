@@ -12,6 +12,7 @@ struct node {
 typedef struct node node;
 
 int fowardNode=-9999;
+bool foundNode;
 
 node * new_node(int);
 node * add_sibling(node *, node *);
@@ -19,8 +20,11 @@ node * add_child(node *, node *);
 void print_node_decendents(node *, bool);
 
 int search_forwarder(node *, node *);
-void searchNode(node *, node *);
+int search_forwarder_withParent(node *, node *);
 
+
+void searchNode(node *, node *);
+void search_forwarder_childs(node *, node *, bool);
 void printList(node *);
 
 
@@ -55,7 +59,8 @@ int main(int argc, char *argv[])
 
     print_node_decendents(root, false);
     printf("\n");
-    int nodeTo=search_forwarder(node1, node8);
+    int nodeToWithParent=search_forwarder_withParent(node2, node10);
+    int nodeTo=search_forwarder(node2, node10);
  }
 
 node * new_node(int id){
@@ -120,7 +125,7 @@ void print_node_decendents(struct node* root, bool hasSilbing){
 }
 
 
-int search_forwarder(node* from, node* to){
+int search_forwarder_withParent(node* from, node* to){
     searchNode(from, to);
     return fowardNode;
 }
@@ -129,7 +134,7 @@ void searchNode(node* from, node* to){
     if(to->nodeParent){
     /* Si el nodo destino tiene un padre valido */
         if(to->nodeParent->id==from->id){
-            printf(" Send from node %d  \n", to->id);
+            printf("Send from node %d using function with parent \n", to->id);
             fowardNode=to->id;
         }else{
            searchNode(from, to->nodeParent);
@@ -138,6 +143,43 @@ void searchNode(node* from, node* to){
         /* Sino indica que no se puede enviar */
         printf("Unable to send packet from %d \n", from->id);
         fowardNode=-9999;
+    }
+}
+
+
+int search_forwarder(node* from, node* to){
+    node *childs=from->child;
+    while(childs){
+        search_forwarder_childs(childs, to, false);
+        if(foundNode){ 
+            break;    
+        } else {
+            if(childs->sibling){
+                childs=childs->sibling;
+            }else{
+                childs=NULL;
+            }
+        }
+    }
+    if(childs->id){
+         printf("Send from node %d \n", childs->id); 
+        return childs->id;
+    } else {
+        printf("Unable to send packet from %d \n", from->id);
+        return -9999;
+    }
+}
+
+void search_forwarder_childs(node* from, node* to, bool checkSilbings){
+    if(from){
+        if(from->id==to->id){
+            foundNode=true;
+        }else{
+            search_forwarder_childs(from->child, to, true);
+            if(checkSilbings){
+                search_forwarder_childs(from->sibling, to, true);
+            }
+        }
     }
 }
 
